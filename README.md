@@ -14,9 +14,9 @@ The name for this project will be Luhn, inspired on Hans Peter Luhn (1896 - 1964
 * Parser YAML files trough a C++11 program using a library to read YAML file.
 * Generate a hash-based table to be interpreted in POSIX shell.
 * Create functionality to access to some properties of the interpreted data:
- * Lengths of a nested list
- * Keys of a nested hash-based table
- * Types of value of one specific key
+  * Lengths of a nested list
+  * Keys of a nested hash-based table
+  * Types of value of one specific key
 
 ### Long term
 * Evaluate the feasibility based-on performance to create a purely POSIX shell interpreter of YAML files.
@@ -34,7 +34,7 @@ luhn [options] [filename]
 
 Following is the content of a YAML file named orders.yml:
 
-```
+```yaml
 ---
 date: 2014-07-31
 customer:
@@ -70,7 +70,8 @@ notes: >
 ```
 
 To read that file with Luhn and manipulate it trough POSIX shell, we can run following commands:
-```
+
+```sh
 # Create a POSIX shell hash-based table with the content of a file.
 order=$(luhn -y orders.yml)
 
@@ -78,16 +79,26 @@ order=$(luhn -y orders.yml)
 date=`$order/date`
 
 # Display the value of the key accessed.
-echo $value
+echo $date
 
-# An integer with length of the nested list.
-echo `$mydata/path-to-nested-list:length`
+# Get a reference to nested map.
+customer=`$order/customer`
+echo $customer/first-name	# Ulises
 
-# A list with the keys of the nested hash-based table.
-echo `$mydata/path-to-nested-map:keys`
+# Get the length of the nested list.
+echo `$mydata/items:length`
+
+# Get a list with the keys of the nested hash-based table.
+echo `$mydata/customer:keys`
 
 # Iterate over the values in a nested list.
-for value in `$mydata/path-to-nested-list`; do
-	echo $value
+for item in `$mydata/items`; do
+	echo -e "`$item/id` \t `$item/description` \t `$item/quantity` \t `$item/price`"
 done
+
+# Get the type of value in specific key
+echo `$mydata/customer:type`		# map
+echo `$mydata/items:type`			# list
+echo `$mydata/customer/tax-id:type`	# scalar
+
 ```
