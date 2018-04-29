@@ -61,7 +61,7 @@ ship-to: &shipping-address
   city: Guanjuato
   country: MX
 
-ship-to: *shipping-address
+bill-to: *shipping-address
 
 notes: >
   If nobody is there, please
